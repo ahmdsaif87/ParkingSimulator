@@ -7,8 +7,8 @@ EditorBuildSettings:
   m_Scenes:
   - enabled: 1
     path: Assets/Scenes/MainMenu.unity
-    guid: ee889d76a7fcda2439b80c938a57ee46
-  - enabled: 1
+    guid: f260619094000584c82f0a06fe7c3e0c
+  - enabled: 0
     path: Assets/Scenes/SimplePoly City - Low Poly Assets_Demo Scene.unity
     guid: 7e6d3f4e5d896154ab4438845532ac3e
   - enabled: 1
