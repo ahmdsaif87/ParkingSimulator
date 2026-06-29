@@ -29,6 +29,14 @@ public class CarController : MonoBehaviour
     [Header("Horn")]
     public AudioSource hornAudio;
 
+    [Header("Engine Audio")]
+    public AudioSource engineAudio;
+    [SerializeField] float engineIdlePitch = 0.6f;
+    [SerializeField] float engineMaxPitch = 1.8f;
+    [SerializeField] float engineIdleVolume = 0.2f;
+    [SerializeField] float engineMaxVolume = 1.0f;
+    [SerializeField] float engineSmoothTime = 0.3f;
+
     [Header("Turn Signals")]
     public Light[] leftTurnLights;
     public Light[] rightTurnLights;
@@ -44,6 +52,11 @@ public class CarController : MonoBehaviour
     Coroutine leftBlinkCoroutine;
     Coroutine rightBlinkCoroutine;
 
+    float currentEnginePitch;
+    float currentEngineVolume;
+    float enginePitchVel;
+    float engineVolVel;
+
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -56,6 +69,8 @@ public class CarController : MonoBehaviour
         if (frontLeftWC == null) FindWheelColliders();
         if (frontLeftWheel == null) FindWheelMeshes();
         if (hornAudio == null) hornAudio = GetComponent<AudioSource>();
+
+        SetupEngineAudio();
     }
 
     void FindWheelColliders()
@@ -121,6 +136,8 @@ public class CarController : MonoBehaviour
         UpdateWheel(frontRightWC, frontRightWheel);
         UpdateWheel(rearLeftWC, rearLeftWheel);
         UpdateWheel(rearRightWC, rearRightWheel);
+
+        UpdateEngineSound(speed);
     }
 
     void UpdateWheel(WheelCollider wc, Transform wheelMesh)
@@ -128,6 +145,37 @@ public class CarController : MonoBehaviour
         if (wc == null || wheelMesh == null) return;
         wc.GetWorldPose(out var pos, out var rot);
         wheelMesh.SetPositionAndRotation(pos, rot);
+    }
+
+    void SetupEngineAudio()
+    {
+        if (engineAudio == null)
+            engineAudio = gameObject.AddComponent<AudioSource>();
+
+        engineAudio.clip = Resources.Load<AudioClip>("Audio/engine");
+        engineAudio.loop = true;
+        engineAudio.playOnAwake = false;
+        engineAudio.spatialBlend = 0f;
+        engineAudio.volume = 0f;
+        engineAudio.Play();
+
+        bool sfxOn = PlayerPrefs.GetInt("SFXOn", 1) == 1;
+        engineAudio.mute = !sfxOn;
+    }
+
+    void UpdateEngineSound(float speed)
+    {
+        if (engineAudio == null) return;
+
+        float t = Mathf.Clamp01(speed / maxSpeed);
+        float targetPitch = Mathf.Lerp(engineIdlePitch, engineMaxPitch, t);
+        float targetVolume = Mathf.Lerp(engineIdleVolume, engineMaxVolume, t);
+
+        currentEnginePitch = Mathf.SmoothDamp(currentEnginePitch, targetPitch, ref enginePitchVel, engineSmoothTime);
+        currentEngineVolume = Mathf.SmoothDamp(currentEngineVolume, targetVolume, ref engineVolVel, engineSmoothTime);
+
+        engineAudio.pitch = currentEnginePitch;
+        engineAudio.volume = currentEngineVolume;
     }
 
     void PlayHorn()

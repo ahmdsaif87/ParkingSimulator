@@ -96,7 +96,7 @@ public class GameManager : MonoBehaviour
                 playerRb.angularVelocity = Vector3.zero;
             }
             if (UIManager.Instance != null)
-                UIManager.Instance.ShowSuccessPanel("Parkir Berhasil", "Level 1 Selesai");
+                UIManager.Instance.ShowSuccessPanel("You Did a Great Job", "Level 1 is complete\nDo you want to move to Level 2?");
         }
         else if (currentState == GameState.Level2)
         {
