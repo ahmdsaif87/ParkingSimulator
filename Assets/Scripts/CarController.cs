@@ -100,9 +100,9 @@ public class CarController : MonoBehaviour
 
     void Update()
     {
-        hInput = Input.GetAxisRaw("Horizontal");
-        vInput = Input.GetAxisRaw("Vertical");
-        braking = Input.GetKey(KeyCode.Space);
+        hInput = EasyVehicleSteering.InputHandler.Horizontal;
+        vInput = EasyVehicleSteering.InputHandler.Vertical;
+        braking = EasyVehicleSteering.InputHandler.IsBraking;
 
         if (Input.GetKeyDown(KeyCode.H)) PlayHorn();
         if (Input.GetKeyDown(KeyCode.Q)) ToggleLeftSignal();

@@ -19,6 +19,9 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI successSubtitleText;
     public Button nextLevelButton;
 
+    [Header("Next Level")]
+    public string nextLevelSceneName = "Level 1";
+
     void Awake()
     {
         if (Instance != null && Instance != this)
@@ -78,6 +81,6 @@ public class UIManager : MonoBehaviour
 
     public void LoadNextLevel()
     {
-        SceneManager.LoadScene("Assets/Scenes/Level/Level 2.unity");
+        SceneManager.LoadScene(nextLevelSceneName);
     }
 }

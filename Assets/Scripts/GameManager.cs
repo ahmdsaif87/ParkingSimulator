@@ -73,7 +73,7 @@ public class GameManager : MonoBehaviour
                 EnableTraffic(true);
                 ResetPlayer();
                 if (UIManager.Instance != null)
-                    UIManager.Instance.ShowMessage("LEVEL 2 - Traffic Cars Moving!", 2f);
+                    UIManager.Instance.ShowMessage("LEVEL 2 - Navigate to the parking zone!", 2f);
                 break;
 
             case GameState.GameOver:
@@ -100,9 +100,15 @@ public class GameManager : MonoBehaviour
         }
         else if (currentState == GameState.Level2)
         {
+            if (playerCarController != null)
+                playerCarController.enabled = false;
+            if (playerRb != null)
+            {
+                playerRb.linearVelocity = Vector3.zero;
+                playerRb.angularVelocity = Vector3.zero;
+            }
             if (UIManager.Instance != null)
-                UIManager.Instance.ShowMessage("YOU WIN!", 2f);
-            StartCoroutine(DelayedAction(3f, () => SceneManager.LoadScene("MainMenu")));
+                UIManager.Instance.ShowSuccessPanel("Level 2 Complete!", "Congratulations! You've cleared the final level.\nThanks for playing!\n\nTap \"Back to Main Menu\" to return.");
         }
     }
 
